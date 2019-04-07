@@ -7,9 +7,9 @@ Item.allItems = [];
 var clkCount = 0;
 
 // variable to store current displayed pics
-var firstPic;
-var secondPic;
-var thirdPic;
+var firstPic = 0;
+var secondPic = 0;
+var thirdPic = 0;
 
 //create objects for shopping items
 function Item(name, filepath){
@@ -51,67 +51,94 @@ itmContainerFirst.addEventListener('click',randomItem1);
 itmContainerSecond.addEventListener('click',randomItem2);
 itmContainerThird.addEventListener('click',randomItem3);
 
+
+function random(){
+  var num = Math.floor(Math.random()*Item.allItems.length);
+  return num;
+}
+
 function randomNum(){
-  var num = Math.floor(Math.random()*Item.allItems.length); 
-  for (var i=0; i<Item.allItems.length; i++){
-    console.log('within Loop',Item.allItems[i].prevdisplay);
-    if (Item.allItems[i].prevdisplay === false){
-      Item.allItems[i].prevdisplay = true;
-      console.log('within If', Item.allItems[i].prevdisplay);
-      return num;
-    }
+  var num = random();
+  while (num === firstPic || num === secondPic || num === thirdPic ||Item.allItems[num].prevdisplay=== true){
+    console.log('Duplicate picture returned so call again random number');
+    num = randomNum();
   }
+  return num;
 }
 
 //display random shop itmes
 function randomItem1(){
-  console.log('First call');
   var first = randomNum();
-  console.log('Second call');
   var second = randomNum();
-  console.log('Third call');
   var third = randomNum();
-  displayItem(first,second,third);
-  clkCount = clkCount + 1;
-  firstPic=first;
-  secondPic=second;
-  thirdPic=third;
+  if (second === first || third === first || second === third){
+    randomItem1();
+  }else {
+    if (clkCount < 25){
+      displayItem(first,second,third);
+      clkCount = clkCount + 1;
+      Item.allItems[firstPic].clickcount = Item.allItems[firstPic].clickcount + 1;
+      firstPic=first;
+      secondPic=second;
+      thirdPic=third;
+    }else if (clkCount > 24 && clkCount ===25){
+      updateArray();
+      displayResult();
+    }
+  }
 }
 
 function randomItem2(){
   var first = randomNum();
   var second = randomNum();
   var third = randomNum();
-  displayItem(first,second,third);
-  clkCount = clkCount + 1;
-  firstPic=first;
-  secondPic=second;
-  thirdPic=third;
+  if (second === first || third === first || second === third){
+    randomItem1();
+  }else {
+    if (clkCount < 25){
+      displayItem(first,second,third);
+      clkCount = clkCount + 1;
+      Item.allItems[firstPic].clickcount = Item.allItems[firstPic].clickcount + 1;
+      firstPic=first;
+      secondPic=second;
+      thirdPic=third;
+    }else if (clkCount > 24 && clkCount ===25){
+      updateArray();
+      displayResult();
+    }
+  }
 }
 
 function randomItem3(){
   var first = randomNum();
   var second = randomNum();
   var third = randomNum();
-  displayItem(first,second,third);
-  clkCount = clkCount + 1;
-  firstPic=first;
-  secondPic=second;
-  thirdPic=third;
+  if (second === first || third === first || second === third){
+    randomItem1();
+  }else {
+    if (clkCount < 25){
+      displayItem(first,second,third);
+      clkCount = clkCount + 1;
+      Item.allItems[firstPic].clickcount = Item.allItems[firstPic].clickcount + 1;
+      firstPic=first;
+      secondPic=second;
+      thirdPic=third;
+    }else if (clkCount > 24 && clkCount ===25){
+      updateArray();
+      displayResult();
+    }
+  }
 }
 
-function summaryClicks(){
-  
-}
 
 function displayItem(first, second, third){
 
   itmContainerFirst.src = Item.allItems[first].filepath;  
   itmContainerSecond.src = Item.allItems[second].filepath;
   itmContainerThird.src = Item.allItems[third].filepath;
-  Item.allItems[first].clickcount = Item.allItems[first].clickcount + 1;
-  Item.allItems[second].clickcount = Item.allItems[second].clickcount + 1;
-  Item.allItems[third].clickcount = Item.allItems[third].clickcount + 1;
+  //Item.allItems[first].clickcount = Item.allItems[first].clickcount + 1;
+  //Item.allItems[second].clickcount = Item.allItems[second].clickcount + 1;
+  //Item.allItems[third].clickcount = Item.allItems[third].clickcount + 1;
   //set all the items to false except 3 displayed
   for (var i =0; i< Item.allItems.length; i++){
     Item.allItems[i].prevdisplay = false;
@@ -125,3 +152,37 @@ function displayItem(first, second, third){
 randomItem1();
 randomItem2();
 randomItem3();
+
+// Global variable to hold the array of lables and data
+var labelsArray = [];
+var data = [];
+var bkGrdColor = [];
+
+function updateArray(){
+  for(var j=0; j<Item.allItems.length; j++){
+    labelsArray[j] = Item.allItems[j].name;
+    data[j] = Item.allItems[j].clickcount;
+    bkGrdColor[j]= '#000000';
+  }
+}
+//Display the results
+function displayResult(){
+  var canvas = document.getElementById('chart');
+  var ctx = canvas.getContext('2d');
+  new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: labelsArray,
+      datasets: [{
+        label: 'Votes for items',
+        data: data,
+        backgroundColor: bkGrdColor
+      }]
+    },
+    options: {}
+  });
+}
+//test
+//updateArray();
+//displayResult();
+
