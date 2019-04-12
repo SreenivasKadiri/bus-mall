@@ -41,11 +41,7 @@ body{
 
 #chart{
     margin-left: 25px;
-    margin-top: 150px;
-    margin-right: 25px;
-    margin-bottom: 25px;
+    margin-top: 300px;
+    margin-right: 300px;
+    margin-bottom: 300px;
 }
-#chart {
-    height: 100px;
-    width: 100px;
-  }
