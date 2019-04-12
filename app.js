@@ -18,7 +18,7 @@ function Item(name, filepath){
   this.clickcount = 0;
   this.prevdisplay = false;
   Item.allItems.push(this);
-  localStorage.setItem('itemList',Item.allItems)
+  localStorage.setItem('itemList',Item.allItems);
 }
 
 new Item('bag','img/bag.jpg');
@@ -69,10 +69,6 @@ function randomNum(){
 
 //display random shop itmes
 function randomItem1(){
-  console.log('localstorage', localStorage.getItem('totalClickCount'));
-  if (localStorage.getItem('totalClickCount') === null){
-    console.log('localstorage value is null ');
-  }
   var first = randomNum();
   var second = randomNum();
   var third = randomNum();
@@ -96,7 +92,6 @@ function randomItem1(){
       displayResult();
     }
   }
-  
 }
 
 function randomItem2(){
@@ -109,7 +104,7 @@ function randomItem2(){
     if (clkCount < 25){
       displayItem(first,second,third);
       clkCount = clkCount + 1;
-      Item.allItems[firstPic].clickcount = Item.allItems[firstPic].clickcount + 1;
+      Item.allItems[secondPic].clickcount = Item.allItems[secondPic].clickcount + 1;
       firstPic=first;
       secondPic=second;
       thirdPic=third;
@@ -135,7 +130,7 @@ function randomItem3(){
     if (clkCount < 25){
       displayItem(first,second,third);
       clkCount = clkCount + 1;
-      Item.allItems[firstPic].clickcount = Item.allItems[firstPic].clickcount + 1;
+      Item.allItems[thirdPic].clickcount = Item.allItems[thirdPic].clickcount + 1;
       firstPic=first;
       secondPic=second;
       thirdPic=third;
@@ -151,15 +146,57 @@ function randomItem3(){
   }
 }
 
+function defFunction(){
+  //check the localstorage before you call random
+  console.log('localstorage', localStorage.getItem('totalClickCount'));
+  if (localStorage.getItem('totalClickCount') === null){
+    console.log('localstorage value is null ');
+    var first = randomNum();
+    var second = randomNum();
+    var third = randomNum();
+    if (second === first || third === first || second === third){
+      randomItem1();
+    }else{    
+      displayItem(first,second,third);
+      firstPic=first;
+      secondPic=second;
+      thirdPic=third;  
+    }
+  }
+  else {
+    first = parseInt(localStorage.getItem('displayedFirstPic'));
+    second = parseInt(localStorage.getItem('displayedSecondPic'));
+    third = parseInt(localStorage.getItem('displayedThreePic'));
+    clkCount = parseInt(localStorage.getItem('totalClickCount'));
+    labelsArray = localStorage.getItem('labelsArray');
+    data = localStorage.getItem('data');
+    bkGrdColor = localStorage.getItem('bkGrdColor');
+    console.log('Array Types:', typeof labelsArray, typeof data, typeof bkGrdColor);
+    console.log('labelsArray displya',labelsArray);
+    if (typeof labelsArray === 'string') {
+      console.log('labelsArray',labelsArray, labelsArray.split(','));
+    }
+    console.log('first second third in local, clkCount:', first, second, third, clkCount);
+    console.log('labelsArray data:', labelsArray, data, bkGrdColor);
+    displayItem(first,second,third);
+    firstPic=first;
+    secondPic=second;
+    thirdPic=third;
+    if (clkCount === 25){
+      console.log('click Count 25:' );
+      //updateArray();
+      displayResult();
+    }
+  }
+}
+
+defFunction();
 
 function displayItem(first, second, third){
 
   itmContainerFirst.src = Item.allItems[first].filepath;  
   itmContainerSecond.src = Item.allItems[second].filepath;
   itmContainerThird.src = Item.allItems[third].filepath;
-  //Item.allItems[first].clickcount = Item.allItems[first].clickcount + 1;
-  //Item.allItems[second].clickcount = Item.allItems[second].clickcount + 1;
-  //Item.allItems[third].clickcount = Item.allItems[third].clickcount + 1;
   //set all the items to false except 3 displayed
   for (var i =0; i< Item.allItems.length; i++){
     Item.allItems[i].prevdisplay = false;
@@ -169,7 +206,7 @@ function displayItem(first, second, third){
   Item.allItems[third].prevdisplay = true;
   console.log('first,second,third:',first, second, third);
 }
-randomItem1();
+//randomItem1();
 //randomItem2();
 //randomItem3();
 
@@ -180,7 +217,9 @@ var bkGrdColor = [];
 
 function updateArray(){
   for(var j=0; j<Item.allItems.length; j++){
+    console.log('UpdateArray:', Item.allItems[j].name);
     labelsArray[j] = Item.allItems[j].name;
+    console.log('UpdateArray2:',labelsArray[j]);
     data[j] = Item.allItems[j].clickcount;
     bkGrdColor[j]= '#000000';    
   }
@@ -193,6 +232,17 @@ function updateArray(){
 function displayResult(){
   var canvas = document.getElementById('chart');
   var ctx = canvas.getContext('2d');
+  console.log('Array Types FirstTime :', labelsArray, data, bkGrdColor);
+  if (typeof labelsArray === 'string' ) {
+    labelsArray = labelsArray.split(',');
+  }
+  if (typeof data === 'string' ) {
+    data = data.split(',');
+  }
+  if (typeof bkGrdColor === 'string' ) {
+    bkGrdColor = bkGrdColor.split(',');
+  }
+  console.log('Array Types FirstTime:', typeof labelsArray, typeof data, typeof bkGrdColor);
   new Chart(ctx, {
     type: 'line',
     data: {
@@ -206,7 +256,5 @@ function displayResult(){
     options: {}
   });
 }
-//test
-//updateArray();
-//displayResult();
+
 
