@@ -18,6 +18,7 @@ function Item(name, filepath){
   this.clickcount = 0;
   this.prevdisplay = false;
   Item.allItems.push(this);
+  localStorage.setItem('itemList',Item.allItems)
 }
 
 new Item('bag','img/bag.jpg');
@@ -68,6 +69,10 @@ function randomNum(){
 
 //display random shop itmes
 function randomItem1(){
+  console.log('localstorage', localStorage.getItem('totalClickCount'));
+  if (localStorage.getItem('totalClickCount') === null){
+    console.log('localstorage value is null ');
+  }
   var first = randomNum();
   var second = randomNum();
   var third = randomNum();
@@ -81,11 +86,17 @@ function randomItem1(){
       firstPic=first;
       secondPic=second;
       thirdPic=third;
+      //storing all the required values in local storage
+      localStorage.setItem('displayedFirstPic',firstPic );
+      localStorage.setItem('displayedSecondPic',secondPic );
+      localStorage.setItem('displayedThreePic',thirdPic );
+      localStorage.setItem('totalClickCount',clkCount );
     }else if (clkCount > 24 && clkCount ===25){
       updateArray();
       displayResult();
     }
   }
+  
 }
 
 function randomItem2(){
@@ -102,6 +113,11 @@ function randomItem2(){
       firstPic=first;
       secondPic=second;
       thirdPic=third;
+      //storing all the required values in local storage
+      localStorage.setItem('displayedFirstPic',firstPic );
+      localStorage.setItem('displayedSecondPic',secondPic );
+      localStorage.setItem('displayedThreePic',thirdPic );
+      localStorage.setItem('totalClickCount',clkCount );
     }else if (clkCount > 24 && clkCount ===25){
       updateArray();
       displayResult();
@@ -123,6 +139,11 @@ function randomItem3(){
       firstPic=first;
       secondPic=second;
       thirdPic=third;
+      //storing all the required values in local storage
+      localStorage.setItem('displayedFirstPic',firstPic );
+      localStorage.setItem('displayedSecondPic',secondPic );
+      localStorage.setItem('displayedThreePic',thirdPic );
+      localStorage.setItem('totalClickCount',clkCount );
     }else if (clkCount > 24 && clkCount ===25){
       updateArray();
       displayResult();
@@ -147,11 +168,10 @@ function displayItem(first, second, third){
   Item.allItems[second].prevdisplay = true;
   Item.allItems[third].prevdisplay = true;
   console.log('first,second,third:',first, second, third);
-  console.log('Click Count:', clkCount);
 }
 randomItem1();
-randomItem2();
-randomItem3();
+//randomItem2();
+//randomItem3();
 
 // Global variable to hold the array of lables and data
 var labelsArray = [];
@@ -162,8 +182,12 @@ function updateArray(){
   for(var j=0; j<Item.allItems.length; j++){
     labelsArray[j] = Item.allItems[j].name;
     data[j] = Item.allItems[j].clickcount;
-    bkGrdColor[j]= '#000000';
+    bkGrdColor[j]= '#000000';    
   }
+  //storing all the required values in local storage
+  localStorage.setItem('labelsArray',labelsArray );
+  localStorage.setItem('data',data );
+  localStorage.setItem('bkGrdColor',bkGrdColor );
 }
 //Display the results
 function displayResult(){
